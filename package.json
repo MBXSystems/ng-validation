@@ -10,5 +10,8 @@
   "license": "GPLv3",
   "bugs": {
     "url": "https://github.com/mightymoose/ng-validation/issues"
+  },
+  "devDependencies":{
+    "karma": "0.10"
   }
 }
