@@ -1,24 +1,40 @@
-describe("Service: updateFieldValidity", function(){
+describe("Service: updateFormValidity", function(){
 
-    var field;
     var updateFieldValidity;
+    var updateFormValidity;
 
     beforeEach(function(){
         module('ngValidation');
     });
 
-    beforeEach(inject(function(_updateFieldValidity_){
-        updateFieldValidity = _updateFieldValidity_;
+    beforeEach(inject(function(_updateFormValidity_){
+        updateFormValidity = _updateFormValidity_;
     }));
 
-    beforeEach(function(){
-        field = jasmine.createSpyObj('field', ['$setValidity']);
-    });
+    it("sets form validity", function(){
+        var form = {
+            name: jasmine.createSpyObj('name', ['$setValidity']),
+            title: jasmine.createSpyObj('title', ['$setValidity'])
+        };
 
-    it("sets validity", function(){
-        updateFieldValidity(field, { valid: true, invalid: false });
-        expect(field.$setValidity).toHaveBeenCalledWith('valid', true);
-        expect(field.$setValidity).toHaveBeenCalledWith('invalid', false);
+
+        var titleValidity = { present: true
+                            , magic: false
+                            }
+
+        updateFormValidity(form, {
+            name: { present: true
+                  , magic: false
+                  },
+            title: { present: false
+                   , magic: false
+                   }
+        });
+
+        expect(form.name.$setValidity).toHaveBeenCalledWith('present', true);
+        expect(form.name.$setValidity).toHaveBeenCalledWith('magic', false);
+        expect(form.title.$setValidity).toHaveBeenCalledWith('present', false);
+        expect(form.title.$setValidity).toHaveBeenCalledWith('magic', false);
     });
 
 });
