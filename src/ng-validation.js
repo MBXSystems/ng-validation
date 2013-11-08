@@ -47,9 +47,19 @@ angular.module('ngValidation').factory('updateFormValidity', ['updateFieldValidi
 angular.module('ngValidation').factory('fieldValidation', ['simpleValidation', 'mergeValidationResults', function(simpleValidation, mergeValidationResults){
     var innerFactory = function(validations){
         var validators = [];
+
+
         for(key in validations){
-            validators.push(simpleValidation(key, validations[key]));
+            var currentValidators = validations[key];
+            if(angular.isArray(currentValidators)) {
+                angular.forEach(currentValidators, function(currentValidator){
+                    validators.push(simpleValidation(key, currentValidator));
+                });
+            } else {
+                validators.push(simpleValidation(key, currentValidators));
+            }
         }
+
         return function(value){
 
             var validationResults = [];
