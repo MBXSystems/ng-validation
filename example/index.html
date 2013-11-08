@@ -11,10 +11,16 @@
         <script>
             angular.module('example', ['ngValidation']);
 
-            angular.module('example').controller('ExampleController', function($scope){
+            angular.module('example').controller('ExampleController', function($scope, formValidator){
+
+                var longStringValidator = function(s){
+                    return angular.isString(s) &&
+                           s.length > 5;
+                };
+
+                var validate = formValidator({ 'longString': {'longEnough': longStringValidator }});
                 $scope.validate = function(){
-                    console.log($scope.sillyForm);
-                    console.log("HI!");
+                    validate($scope.sillyForm);
                 }
             });
         </script>
@@ -24,10 +30,22 @@
         <div class="container">
             <div class="row" ng-controller="ExampleController">
                 <form class="form-horizontal" role="form" name="sillyForm" ng-submit="validate()">
+<<<<<<< HEAD
                     <div class="form-group">
                         <label for="longString" class="col-sm-2 control-label">Long String</label>
                         <div class="col-sm-10">
                             <input name="longString" ng-model="longString" type="text" class="form-control" id="longString" placeholder="Long String">
+=======
+                    <div class="form-group" ng-class="{'has-error': sillyForm.$invalid}">
+                        <label for="longString" class="col-sm-2 control-label">Long String</label>
+                        <div class="col-sm-10">
+                            <input name="longString" ng-model="longString" type="text" class="form-control" id="longString" placeholder="Long String">
+                            <span class="help-block" ng-show="sillyForm.longString.$invalid">
+                                <div ng-show="sillyForm.longString.$error.longEnough">
+                                    The string is not long enough!
+                                </div>
+                            </span>
+>>>>>>> master
                         </div>
                     </div>
                     <div class="form-group">
