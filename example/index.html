@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        
+        <script src="angular.js"></script>
+        <script src="ng-validation.js"></script>
+
+        <script>
+            angular.module('example', ['ngValidation']);
+
+            angular.module('example').controller('ExampleController', function($scope, formValidator){
+
+                var longStringValidator = function(s){
+                    return angular.isString(s) &&
+                           s.length > 5;
+                };
+
+                var validate = formValidator({ 'longString': {'longEnough': longStringValidator }});
+                $scope.validate = function(){
+                    validate($scope.sillyForm);
+                }
+            });
+        </script>
+
+    </head>
+    <body ng-app="example">
+        <div class="container">
+            <div class="row" ng-controller="ExampleController">
+                <form class="form-horizontal" role="form" name="sillyForm" ng-submit="validate()">
+                    <div class="form-group" ng-class="{'has-error': sillyForm.$invalid}">
+                        <label for="longString" class="col-sm-2 control-label">Long String</label>
+                        <div class="col-sm-10">
+                            <input name="longString" ng-model="longString" type="text" class="form-control" id="longString" placeholder="Long String">
+                            <span class="help-block" ng-show="sillyForm.longString.$invalid">
+                                <div ng-show="sillyForm.longString.$error.longEnough">
+                                    The string is not long enough!
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Validate</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
