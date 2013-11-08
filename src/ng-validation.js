@@ -30,3 +30,9 @@ angular.module('ngValidation').value('mergeValidationResults', function(res, res
     return result;
 });
 
+angular.module('ngValidation').value('updateFieldValidity', function(field, validity){
+    for(key in validity){
+        field.$setValidity(key, validity[key]);
+    }
+});
+
