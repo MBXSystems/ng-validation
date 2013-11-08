@@ -91,7 +91,7 @@ angular.module('ngValidation').factory('formValidator', ['formValidation', 'upda
         return function(form){
             var formValues = {};
             for(key in validations){
-                formValues[key] = form[key].$modelValue()
+                formValues[key] = form[key].$modelValue
             }
             var formValidator = formValidation(validations);
             var validationResults = formValidator(formValues);

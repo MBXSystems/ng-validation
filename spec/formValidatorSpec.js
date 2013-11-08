@@ -13,12 +13,12 @@ describe("Service: formValidator", function(){
     beforeEach(inject(function(formValidator){
 
         form = {
-            name: jasmine.createSpyObj('name', ['$setValidity', '$modelValue']),
-            title: jasmine.createSpyObj('title', ['$setValidity', '$modelValue'])
+            name: jasmine.createSpyObj('name', ['$setValidity']),
+            title: jasmine.createSpyObj('title', ['$setValidity'])
         };
         validations = jasmine.createSpyObj('validations', ['valid', 'invalid']);
-        form.name.$modelValue.andReturn(nameValue);
-        form.title.$modelValue.andReturn(titleValue);
+        form.name.$modelValue = nameValue;
+        form.title.$modelValue = titleValue;
         validations.valid.andReturn(true);
         validations.invalid.andReturn(false);
         validator = formValidator({name: { valid: validations.valid
