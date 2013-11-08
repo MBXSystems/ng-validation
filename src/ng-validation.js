@@ -85,3 +85,17 @@ angular.module('ngValidation').factory('formValidation', ['fieldValidation', fun
     };
     return innerFactory;
 }]);
+
+angular.module('ngValidation').factory('formValidator', ['formValidation', 'updateFormValidity', function(formValidation, updateFormValidity){
+    return function(validations){
+        return function(form){
+            var formValues = {};
+            for(key in validations){
+                formValues[key] = form[key].$modelValue()
+            }
+            var formValidator = formValidation(validations);
+            var validationResults = formValidator(formValues);
+            updateFormValidity(form, validationResults);
+        }
+    }
+}]);
