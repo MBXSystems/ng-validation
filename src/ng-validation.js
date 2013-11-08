@@ -67,3 +67,35 @@ angular.module('ngValidation').factory('fieldValidation', ['simpleValidation', '
     };
     return innerFactory;
 }]);
+
+angular.module('ngValidation').factory('formValidation', ['fieldValidation', function(fieldValidation){
+    var innerFactory = function(validations){
+        var validators = {};
+        for(key in validations){
+            validators[key] = fieldValidation(validations[key]);
+        }
+        return function(form){
+            var result = {};
+            for(key in validators){
+                var field = form[key];
+                result[key] = validators[key](field);
+            }
+            return result;
+        }
+    };
+    return innerFactory;
+}]);
+
+angular.module('ngValidation').factory('formValidator', ['formValidation', 'updateFormValidity', function(formValidation, updateFormValidity){
+    return function(validations){
+        return function(form){
+            var formValues = {};
+            for(key in validations){
+                formValues[key] = form[key].$modelValue()
+            }
+            var formValidator = formValidation(validations);
+            var validationResults = formValidator(formValues);
+            updateFormValidity(form, validationResults);
+        }
+    }
+}]);
