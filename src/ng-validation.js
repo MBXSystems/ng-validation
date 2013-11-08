@@ -4,13 +4,21 @@ angular.module('ngValidation').value('isDefined', function(value){
     return angular.isDefined(value);
 });
 
-angular.module('ngValidation').value('simpleValidation', function(label, validator){
-    return function(value){
-        var result = {};
-        result[label] = validator(value);
-        return result;
+angular.module('ngValidation').factory('simpleValidation', ['$injector', function($injector){
+    return function(label, validator){
+        var resolvedValidator;
+        if(angular.isString(validator)){
+            resolvedValidator = $injector.get(validator);
+        } else {
+            resolvedValidator = validator;
+        }
+        return function(value){
+            var result = {};
+            result[label] = resolvedValidator(value);
+            return result;
+        }
     }
-});
+}]);
 
 angular.module('ngValidation').value('mergeValidationResults', function(res, res2){
     var result = {};
