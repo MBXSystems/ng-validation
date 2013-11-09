@@ -11,6 +11,10 @@
         <script>
             angular.module('example', ['ngValidation']);
 
+            angular.module('ngValidation').value('lowercaseValidator', function(s){
+                return s == s.toLowerCase();
+            });
+
             angular.module('example').controller('ExampleController', function($scope, formValidator){
 
                 var longStringValidator = function(s){
@@ -18,7 +22,19 @@
                            s.length > 5;
                 };
 
-                var validate = formValidator({ 'longString': {'longEnough': longStringValidator }});
+                var validate = formValidator({
+                    longString: {
+                        longEnough: longStringValidator 
+                    },
+                    longLowercaseString: {
+                        longEnough: longStringValidator,
+                        lowercase: 'lowercaseValidator'
+                    },
+                    wackyString: {
+                        broken: [ longStringValidator, 'lowercaseValidator' ]
+                    }
+                });
+
                 $scope.validate = function(){
                     validate($scope.sillyForm);
                 }
@@ -30,7 +46,7 @@
         <div class="container">
             <div class="row" ng-controller="ExampleController">
                 <form class="form-horizontal" role="form" name="sillyForm" ng-submit="validate()">
-                    <div class="form-group" ng-class="{'has-error': sillyForm.$invalid}">
+                    <div class="form-group" ng-class="{'has-error': sillyForm.longString.$invalid}">
                         <label for="longString" class="col-sm-2 control-label">Long String</label>
                         <div class="col-sm-10">
                             <input name="longString" ng-model="longString" type="text" class="form-control" id="longString" placeholder="Long String">
@@ -39,7 +55,34 @@
                                     The string is not long enough!
                                 </div>
                             </span>
+                        </div>
                     </div>
+                    <div class="form-group" ng-class="{'has-error': sillyForm.longLowercaseString.$invalid}">
+                        <label for="longString" class="col-sm-2 control-label">Long Lowercase String</label>
+                        <div class="col-sm-10">
+                            <input name="longLowercaseString" ng-model="longLowercaseString" type="text" class="form-control" id="longLowercaseString" placeholder="Long Lowercase String">
+                            <span class="help-block" ng-show="sillyForm.longLowercaseString.$invalid">
+                                <div ng-show="sillyForm.longLowercaseString.$error.longEnough">
+                                    The string is not long enough!
+                                </div>
+                                <div ng-show="sillyForm.longLowercaseString.$error.lowercase">
+                                    This MUST be LOWERCASE!!!
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error': sillyForm.wackyString.$invalid}">
+                        <label for="longString" class="col-sm-2 control-label">Weird String</label>
+                        <div class="col-sm-10">
+                            <input name="wackyString" ng-model="wackyString" type="text" class="form-control" id="wackyString" placeholder="Weird String">
+                            <span class="help-block" ng-show="sillyForm.wackyString.$invalid">
+                                <div ng-show="sillyForm.wackyString.$error.broken">
+                                    Something is wrong here!
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-default">Validate</button>
