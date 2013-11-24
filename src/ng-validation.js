@@ -117,3 +117,12 @@ angular.module('ngValidation').factory('formValidator', ['formValidation', 'upda
         }
     }
 }]);
+
+angular.module('ngValidation').factory('backendValidation', function(updateFormValidity){
+    return function(backendAdapter){
+        return function(response, form){
+            var errorObject = backendAdapter(response);
+            updateFormValidity(errorObject);
+        }
+    };
+});
