@@ -117,3 +117,24 @@ angular.module('ngValidation').factory('formValidator', ['formValidation', 'upda
         }
     }
 }]);
+
+angular.module('ngValidation').factory('backendValidation', function(updateFormValidity){
+    return function(backendAdapter){
+        return function(response, form){
+            var errorObject = backendAdapter(response);
+            updateFormValidity(form, errorObject);
+        }
+    };
+});
+
+angular.module('ngValidation').value('railsBackendAdapter', function(results){
+    var adapterResults = {};
+    for(key in results){
+        var errorMessages = results[key];
+        adapterResults[key] = {};
+
+        adapterResults[key].inclusion =
+          errorMessages.indexOf('is not included in the list') == -1
+    }
+    return adapterResults;
+});

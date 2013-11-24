@@ -15,7 +15,7 @@
                 return s == s.toLowerCase();
             });
 
-            angular.module('example').controller('ExampleController', function($scope, formValidator){
+            angular.module('example').controller('ExampleController', function($scope, formValidator, backendValidation, railsBackendAdapter){
 
                 var longStringValidator = function(s){
                     return angular.isString(s) &&
@@ -35,8 +35,15 @@
                     }
                 });
 
+                var resValidator = backendValidation(railsBackendAdapter);
+
                 $scope.validate = function(){
                     validate($scope.sillyForm);
+                    if($scope.sillyForm.$valid){
+                        var railsError = { longString: ['is not included in the list'] };
+                        console.log($scope.sillyForm);
+                        resValidator(railsError, $scope.sillyForm);
+                    }
                 }
             });
         </script>
@@ -53,6 +60,9 @@
                             <span class="help-block" ng-show="sillyForm.longString.$invalid">
                                 <div ng-show="sillyForm.longString.$error.longEnough">
                                     The string is not long enough!
+                                </div>
+                                <div ng-show="sillyForm.longString.$error.inclusion">
+                                    The long string is not included in the list!
                                 </div>
                             </span>
                         </div>
