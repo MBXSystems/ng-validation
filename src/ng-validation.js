@@ -126,3 +126,16 @@ angular.module('ngValidation').factory('backendValidation', function(updateFormV
         }
     };
 });
+
+
+angular.module('ngValidation').value('railsBackendAdapter', function(results){
+    var adapterResults = {};
+    for(key in results){
+        var errorMessages = results[key];
+        adapterResults[key] = {};
+
+        adapterResults[key].inclusion =
+          errorMessages.indexOf('is not included in the list') == -1
+    }
+    return adapterResults;
+});
