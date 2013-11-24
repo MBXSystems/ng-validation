@@ -33,6 +33,6 @@ describe('backendValidation', function(){
     });
 
     it("calls updateFormValidity", function(){
-        expect(updateFormValidity).toHaveBeenCalledWith(backendAdapterResults);
+        expect(updateFormValidity).toHaveBeenCalledWith(form, backendAdapterResults);
     });
 });

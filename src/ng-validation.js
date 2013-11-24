@@ -122,11 +122,10 @@ angular.module('ngValidation').factory('backendValidation', function(updateFormV
     return function(backendAdapter){
         return function(response, form){
             var errorObject = backendAdapter(response);
-            updateFormValidity(errorObject);
+            updateFormValidity(form, errorObject);
         }
     };
 });
-
 
 angular.module('ngValidation').value('railsBackendAdapter', function(results){
     var adapterResults = {};
